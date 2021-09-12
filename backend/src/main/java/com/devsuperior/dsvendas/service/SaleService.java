@@ -1,5 +1,7 @@
 package com.devsuperior.dsvendas.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -7,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.devsuperior.dsvendas.dto.SaleDTO;
+import com.devsuperior.dsvendas.dto.SalesSuccessDTO;
+import com.devsuperior.dsvendas.dto.SalesSumDTO;
 import com.devsuperior.dsvendas.entities.Sale;
 import com.devsuperior.dsvendas.repositories.SaleRepository;
 import com.devsuperior.dsvendas.repositories.SellerRepository;
@@ -30,5 +34,15 @@ public class SaleService {
 		sellerrepository.findAll(); //nao preciso atribuir a nenhuma var(soh quero trazer pra memoria), a JPA vai armazenar esses vended em cash
 		Page<Sale> result = repository.findAll(pageable); //o repository retorna entidade, na sequencia preciso converter pra DTO
 		return result.map(x -> new SaleDTO(x)); //funcao map converte a colecao original pra outro tipo de colecao
+	}
+	
+	@Transactional(readOnly = true)
+	public List<SalesSumDTO> amountGroupedBySeller(){
+		return repository.amountGroupedBySeller();
+	}
+	
+	@Transactional(readOnly = true)
+	public List<SalesSuccessDTO> successGroupedBySeller(){
+		return repository.successGroupedBySeller();
 	}
 }
